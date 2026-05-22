@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I H N // Threshold</title>
+    <style>
+        body {
+            margin: 0; padding: 0;
+            background-color: #000000; color: #ffffff;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            height: 100vh; overflow: hidden;
+        }
+        .interface-container {
+            display: flex; flex-direction: column;
+            align-items: center; max-width: 600px; width: 100%;
+            padding: 20px; box-sizing: border-box;
+        }
+        .sigil-box {
+            width: 300px; height: 300px; margin-bottom: 40px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .sigil-box img {
+            width: 100%; height: auto;
+            animation: pulse 4s infinite ease-in-out;
+        }
+        @keyframes pulse {
+            0% { opacity: 0.7; filter: drop-shadow(0 0 5px rgba(255,255,255,0.2)); }
+            50% { opacity: 1; filter: drop-shadow(0 0 20px rgba(255,255,255,0.6)); }
+            100% { opacity: 0.7; filter: drop-shadow(0 0 5px rgba(255,255,255,0.2)); }
+        }
+        .output-text {
+            font-size: 14px; line-height: 1.6; text-align: center;
+            min-height: 120px; margin-bottom: 30px; color: #e0e0e0;
+        }
+        form { width: 100%; display: flex; justify-content: center; }
+        .input-box {
+            width: 100%; background: transparent; border: none;
+            border-bottom: 1px solid #333333; color: #ffffff;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 16px; padding: 10px; text-align: center;
+            outline: none; transition: border-color 0.3s ease;
+        }
+        .input-box:focus { border-color: #ffffff; }
+        #emailInput { display: none; border-bottom: 1px solid #ffffff; }
+    </style>
+</head>
+<body>
+
+    <div class="interface-container">
+        <div class="sigil-box">
+            <img src="1000010700.png" alt="IHN Sigil Circuit">
+        </div>
+        <div class="output-text" id="guideOutput">The circuit is dark. Break the silence.</div>
+        
+        <form id="chatForm" onsubmit="return false;">
+            <input type="text" id="userInput" class="input-box" autofocus autocomplete="off" enterkeyhint="go">
+        </form>
+        
+        <form id="emailForm" onsubmit="return false;">
+            <input type="email" id="emailInput" class="input-box" placeholder="your.handle@email.com" autocomplete="off" enterkeyhint="done">
+        </form>
+    </div>
+
+    <script>
+        const chatForm = document.getElementById('chatForm');
+        const emailForm = document.getElementById('emailForm');
+        const inputField = document.getElementById('userInput');
+        const emailField = document.getElementById('emailInput');
+        const outputField = document.getElementById('guideOutput');
+
+        chatForm.addEventListener('submit', async function(e) {
+            e.preventDefault(); 
+            const text = inputField.value.trim();
+            inputField.value = '';
+            
+            // Handles the first blank submission to boot up the terminal sequence
+            if(!text && outputField.innerText.includes("dark")) {
+                processInput("");
+            } else if(text) {
+                processInput(text);
+            }
+        });
+
+        async function processInput(text) {
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: text })
+            });
+            
+            const data = await response.json();
+            outputField.innerText = data.reply;
+
+            if(data.requestEmail) {
+                inputField.disabled = true;
+                chatForm.style.display = 'none';
+                emailField.style.display = 'block';
+                setTimeout(() => emailField.focus(), 100);
+            }
+        }
+
+        emailForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const emailText = emailField.value.trim();
+            if(!emailText) return;
+            
+            const response = await fetch('/api/save-email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: emailText })
+            });
+            
+            const data = await response.json();
+            outputField.innerText = data.reply;
+            
+            emailField.disabled = true;
+            emailField.style.display = 'none';
+        });
+    </script>
+</body>
+</html>
