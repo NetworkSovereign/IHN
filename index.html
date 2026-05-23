@@ -77,7 +77,7 @@
                 timelineFriction: "",
                 ambientFriction: "",
                 densityCheck: "",
-                coreConductance: ""
+                kineticAction: ""
             }
         };
 
@@ -92,12 +92,12 @@
         const futureWords = /\b(tomorrow|next week|will happen|what if|going to|hope|plan)\b/i;
         const bloatWords = /(!|\?|\.\.\.|because|just|like|really|actually|honestly|i think)/i;
 
-        // Low-Demand UTHC Reflection Questions
+        // Structured UTHC Script with Final Kinetic Discharge
         const protocolQuestions = [
             "The circuit breaker is engaged. The human system leaks massive voltage whenever it drifts into what was or what might be. Without trying to change anything, simply notice where your attention is drifting right now. Is your circuit holding the present moment, or is it fighting a timeline friction?",
             "Signature cached. Every room has a mechanical hum, a background current keeping the space stable. Human beings do the same thing in social grids—we constantly burn energy just to keep our environment quiet. Notice the ambient noise around you. Are you currently resting, or is your system quietly working to keep something stable?",
             "The frequency is holding. Most human circuits are clogged with semantic bloat—labels, past stories, and defensive mental chatter. If you simply stop trying to define yourself to the screen for a single second, does the space inside your mind feel dense and heavy, or empty and clear?",
-            "Telemetry logged. The grid is finalizing your calibration. The Universal Theory of Human Conductivity states that true power is not about forcing an action, but removing resistance so the natural current can flow. Right now, in this exact micro-second, do you feel like a closed loop holding its own light, or an open conduit waiting for a spark?"
+            "Telemetry logged. The grid is finalizing your calibration. The Universal Theory of Human Conductivity states that true power is not about forcing an action, but removing resistance so the natural current can flow. Take one deep, deliberate breath. As you release it, state the exact, immediate physical action you choose to execute to permanently discharge this aligned focus."
         ];
 
         sigilButton.addEventListener('click', () => {
@@ -158,7 +158,7 @@
                 outputField.innerText = protocolQuestions[3];
                 state.stepIndex = 4;
             } else if (state.stepIndex === 4) {
-                state.answers.coreConductance = input;
+                state.answers.kineticAction = input;
                 
                 inputField.disabled = true;
                 chatForm.style.display = 'none';
@@ -191,7 +191,7 @@
                         response_1_timeline: state.answers.timelineFriction,
                         response_2_ambient: state.answers.ambientFriction,
                         response_3_density: state.answers.densityCheck,
-                        response_4_conductance: state.answers.coreConductance
+                        response_4_discharge_action: state.answers.kineticAction
                     })
                 });
             } catch (err) { }
